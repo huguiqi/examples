@@ -14,6 +14,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
+import io.netty.handler.codec.http.multipart.FileUpload;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +25,7 @@ import java.io.IOException;
 
 public class FileServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-    private static final String FILE_PATH = "uploaded_file"; // 上传文件保存路径
+    private static final String FILE_PATH = "md/"; // 上传文件保存路径
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
@@ -38,17 +42,22 @@ public class FileServerHandler extends SimpleChannelInboundHandler<FullHttpReque
     }
 
     private void handleFileUpload(ChannelHandlerContext ctx, FullHttpRequest request) throws IOException {
-        // 处理文件上传
-        byte[] data = new byte[request.content().readableBytes()];
-        request.content().readBytes(data);
+        // 获取请求内容
+        HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), request);
 
-        saveFile(data);
+        // 解析文件数据
+        InterfaceHttpData data = decoder.getBodyHttpData("file"); // 假设字段名为 "file"
+
+        if (data instanceof FileUpload) {
+            FileUpload fileData = (FileUpload) data;
+            saveFile(fileData); // 直接保存文件
+        }
         sendResponse(ctx, "File uploaded successfully");
     }
 
-    private void saveFile(byte[] data) throws IOException {
-        try (FileOutputStream fos = new FileOutputStream(new File(FILE_PATH))) {
-            fos.write(data);
+    private void saveFile(FileUpload data) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(new File(FILE_PATH+data.getFilename()))) {
+            fos.write(data.get());
         }
         System.out.println("File saved: " + FILE_PATH);
     }
