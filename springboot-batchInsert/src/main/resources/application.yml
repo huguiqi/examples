@@ -1,0 +1,17 @@
+
+spring:
+    datasource:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        password: root
+        url: jdbc:mysql://192.168.0.88:3306/test?useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true
+        username: root
+        hikari:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+    sql:
+        init:
+            schema-locations: "classpath:schema.sql"
+            mode: always
+
+server:
+    servlet:
+        context-path: "/"

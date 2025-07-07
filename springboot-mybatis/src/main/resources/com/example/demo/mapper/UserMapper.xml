@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.example.demo.bean.User">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="NICK_NAME" jdbcType="VARCHAR" property="nickName" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="AGE" jdbcType="INTEGER" property="age" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from T_USER
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.demo.bean.User">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+      select SEQ_USER.nextval from dual
+    </selectKey>
+    insert into T_USER (ID, NAME, NICK_NAME, 
+      PASSWORD, AGE, STATUS)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, #{status,jdbcType=CHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.bean.User">
+    update T_USER
+    set NAME = #{name,jdbcType=VARCHAR},
+      NICK_NAME = #{nickName,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      AGE = #{age,jdbcType=INTEGER},
+      STATUS = #{status,jdbcType=CHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, NAME, NICK_NAME, PASSWORD, AGE, STATUS
+    from T_USER
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, NAME, NICK_NAME, PASSWORD, AGE, STATUS
+    from T_USER
+  </select>
+</mapper>
