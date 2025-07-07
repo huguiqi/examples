@@ -13,7 +13,7 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-public class Demo1ApplicationTests {
+public class NettyDemoApplicationTests {
 
 	@Autowired
 	private PersonDataRepository personDataRepository;
