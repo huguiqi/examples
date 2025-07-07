@@ -44,7 +44,6 @@ public class FileServerHandler extends SimpleChannelInboundHandler<FullHttpReque
     private void handleFileUpload(ChannelHandlerContext ctx, FullHttpRequest request) throws IOException {
         // 获取请求内容
         HttpPostRequestDecoder decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), request);
-
         // 解析文件数据
         InterfaceHttpData data = decoder.getBodyHttpData("file"); // 假设字段名为 "file"
 
